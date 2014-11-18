@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Magsom</string>
+    <string name="title_section1">Lista Produktów</string>
+    <string name="title_section2">Dodaj Produkt</string>
+    <string name="title_section3">Szukaj</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Odśwież</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="hello_blank_fragment">SZUKAJ !!</string>
+
+</resources>
