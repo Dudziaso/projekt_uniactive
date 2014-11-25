@@ -85,7 +85,7 @@ public class DoPost extends AsyncTask<String, Void, Boolean> {
 
                 JSONArray jsonarray = new JSONArray(json);
             //Retrieve the data from the JSON object
-
+            DummyContent.ITEMS.clear();
             for (int i = 0; i < jsonarray.length(); i++) {
 
                 JSONObject jsonobject = jsonarray.getJSONObject(i);

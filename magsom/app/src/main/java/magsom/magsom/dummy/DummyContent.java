@@ -65,5 +65,9 @@ public class DummyContent {
         public String toString() {
             return mProductName + " "+ price;
         }
+
+        public String getItemName() {
+            return mProductName;
+        }
     }
 }

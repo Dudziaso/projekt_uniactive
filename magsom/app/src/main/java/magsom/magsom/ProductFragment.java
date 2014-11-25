@@ -1,19 +1,24 @@
 package magsom.magsom;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import magsom.magsom.dummy.DummyContent;
@@ -37,6 +42,7 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    EditText inputSearch;
     DoPost post = null;
 
     private OnFragmentInteractionListener mListener;
@@ -51,6 +57,7 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
      * Views.
      */
     private ListAdapter mAdapter;
+
 
     // TODO: Rename and change types of parameters
     public static ProductFragment newInstance(String param1, String param2) {
@@ -88,12 +95,9 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
         }
 
         // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, post.dummyContent.ITEMS);
-//        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-//                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
-//        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-//                android.R.layout.simple_list_item_1, android.R.id.text1, post.dataArray);
+        mAdapter = new ProductsListAdapter(getActivity(),
+                android.R.layout.simple_list_item_1, post.dummyContent.ITEMS);
+
     }
 
     @Override
@@ -107,6 +111,29 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
+
+        inputSearch = (EditText) view.findViewById(R.id.inputSearch);
+
+        inputSearch.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                // When user changed the Text
+                ((ArrayAdapter<?>) ProductFragment.this.mAdapter).getFilter().filter(cs.toString());
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                          int arg3) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
 
         return view;
     }
@@ -137,7 +164,8 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
 //            mListener.onFragmentInteraction(post.dummyContent.ITEMS.get(position).mProductId);
 //            Toast.makeText(getActivity(), post.dummyContent.ITEMS.get(position).mProductId + " Clicked!", Toast.LENGTH_SHORT).show();
 //        }
-        Toast.makeText(getActivity(), post.dummyContent.ITEMS.get(position).mProductId + " Clicked!", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), post.dummyContent.ITEMS.get(position).mProductId + " Clicked!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), mAdapter.getItemId(position)+ " Clicked!", Toast.LENGTH_SHORT).show();
     }
 
     /**

@@ -35,7 +35,7 @@ public class ExampleListAdapter extends ArrayAdapter {
         LayoutInflater mInflater = (LayoutInflater) context .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             if(useList){
-                viewToUse = mInflater.inflate(R.layout.example_list_item, null);
+                viewToUse = mInflater.inflate(R.layout.product_list_item, null);
             } else {
                 viewToUse = mInflater.inflate(R.layout.example_grid_item, null);
             }
