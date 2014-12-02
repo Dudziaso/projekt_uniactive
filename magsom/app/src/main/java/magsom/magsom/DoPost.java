@@ -92,28 +92,9 @@ public class DoPost extends AsyncTask<String, Void, Boolean> {
                 MyDataHolder data = new MyDataHolder();
                 DummyContent.DummyItem dummy = new DummyContent.DummyItem(jsonobject .getString("nazwa"), jsonobject .getString("idalternator"),
                         jsonobject .getString("typ"),jsonobject .getString("pulka"),jsonobject .getString("numer"),jsonobject .getString("regal"),
-                        jsonobject .getString("cena"), jsonobject . getString("opis") );
+                        jsonobject .getString("cena"), jsonobject . getString("opis"), jsonobject.getString("barcode") );
                 dummyContent.addItem(dummy);
-//                dummy.mProductId = jsonobject .getString("idalternator");
-//                dummy.mProductName = jsonobject .getString("nazwa");
-//                dummy.mProductType = jsonobject .getString("typ");
-//                dummy.mShelveNumber = jsonobject .getString("pulka");
-//                dummy.regal = jsonobject .getString("regal");
-//                dummy.number = jsonobject .getString("numer");
-//                dummy.price = jsonobject .getString("cena");
-//                dummy.description = jsonobject . getString("opis");
 
-//                data.mProductId = jsonobject .getString("idalternator");
-//                data.mProductName = jsonobject .getString("nazwa");
-//                data.mProductType = jsonobject .getString("typ");
-//                data.mShelveNumber = jsonobject .getString("pulka");
-//                data.regal = jsonobject .getString("regal");
-//                data.number = jsonobject .getString("numer");
-//                data.price = jsonobject .getString("cena");
-//                data.description = jsonobject . getString("opis");
-
-                //Log.d(jsonobject .getString("idalternator"), jsonobject .getString("nazwa"));
-//                dataArray.add(data);
 
             }
 

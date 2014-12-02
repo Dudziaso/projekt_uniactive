@@ -1,7 +1,12 @@
 package magsom.magsom;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,13 +17,12 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import magsom.magsom.dummy.DummyContent;
@@ -166,6 +170,9 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
 //        }
 //        Toast.makeText(getActivity(), post.dummyContent.ITEMS.get(position).mProductId + " Clicked!", Toast.LENGTH_SHORT).show();
         Toast.makeText(getActivity(), mAdapter.getItemId(position)+ " Clicked!", Toast.LENGTH_SHORT).show();
+        FireMissilesDialogFragment ireMissilesDialogFragment = new FireMissilesDialogFragment((DummyContent.DummyItem) mAdapter.getItem(position));
+        ireMissilesDialogFragment.show(getFragmentManager(), "New Dialog");
+
     }
 
     /**
@@ -195,5 +202,97 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
         // TODO: Update argument type and name
         public void onFragmentInteraction(String id);
     }
+
+
+    public class FireMissilesDialogFragment extends DialogFragment {
+        DummyContent.DummyItem product;
+        EditText editBarcode;
+
+        public FireMissilesDialogFragment(DummyContent.DummyItem product){
+            this.product = product;
+        }
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View modifyView = inflater.inflate(R.layout.dialog_edit_item_list, null);
+
+            EditText editName = (EditText) modifyView.findViewById(R.id.et_product_name);
+            EditText editUsage = (EditText) modifyView.findViewById(R.id.et_product_usage);
+            EditText editPolka = (EditText) modifyView.findViewById(R.id.et_product_polka);
+            EditText editRegal = (EditText) modifyView.findViewById(R.id.et_product_regal);
+            EditText editPrice = (EditText) modifyView.findViewById(R.id.et_product_price);
+            EditText editNumber = (EditText) modifyView.findViewById(R.id.et_product_number);
+            EditText editDescription = (EditText) modifyView.findViewById(R.id.et_product_description);
+            editBarcode = (EditText) modifyView.findViewById(R.id.et_product_barcode);
+            Button scanBtn = (Button)modifyView.findViewById(R.id.btn_product_barcode);
+            scanBtn.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                    intent.putExtra("SCAN_MODE", "EAN_CODE_MODE");
+                    startActivityForResult(intent, 0);
+                }
+            });
+
+
+
+            editName.setText(product.mProductName);
+            editUsage.setText(product.mProductType);
+            editPolka.setText(product.mShelveNumber);
+            editRegal.setText(product.regal);
+            editPrice.setText(product.price);
+            editNumber.setText(product.number);
+            editDescription.setText(product.description);
+            editBarcode.setText(product.barcode);
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(modifyView)
+                    // Add action buttons
+                    .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            // sign in the user ...
+                        }
+                    })
+                    .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                           getDialog().cancel();
+                        }
+                    })
+                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                     });
+            return builder.create();
+        }
+
+        public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+            Log.d("dzialam", "cos chce zwrocic");
+            editBarcode.setText(intent.getStringExtra("SCAN_RESULT"));
+//            if (requestCode == 0) {
+//                if (resultCode == RESULT_OK) {
+//                    String contents = intent.getStringExtra("SCAN_RESULT");
+//                    String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+//                    // Handle successful scan
+////                    Toast toast = Toast.makeText(this, "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
+////                    toast.setGravity(Gravity.TOP, 25, 400);
+////                    toast.show();
+//                } else if (resultCode == RESULT_CANCELED) {
+//                    // Handle cancel
+////                    Toast toast = Toast.makeText(this, "Scan was Cancelled!", Toast.LENGTH_LONG);
+////                    toast.setGravity(Gravity.TOP, 25, 400);
+////                    toast.show();
+//
+//                }
+//            }
+        }
+
+    }
+
 
 }

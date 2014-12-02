@@ -68,10 +68,10 @@ public class ProductsListAdapter extends ArrayAdapter
         }
         return mFilter;
     }
-//    @Override
-//    public DummyContent.DummyItem getItem(int position){
-//        return mItemsArray.get(position);
-//    }
+    @Override
+    public DummyContent.DummyItem getItem(int position){
+        return mItemsArray.get(position);
+    }
 
     @Override
     public long getItemId(int position){

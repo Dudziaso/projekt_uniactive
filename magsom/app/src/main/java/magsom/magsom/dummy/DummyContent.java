@@ -44,13 +44,14 @@ public class DummyContent {
         public String regal;
         public String price;
         public String description;
+        public String barcode;
 
 //        public DummyItem(String id, String content) {
 //            this.id = id;
 //            this.content = content;
 //        }
         public DummyItem(String mProductName, String mProductId, String mProductType,String mShelveNumber,
-                         String number, String regal, String price, String description ) {
+                         String number, String regal, String price, String description, String barcode ) {
             this.mProductName = mProductName;
             this.mProductId = mProductId;
             this.mProductType = mProductType;
@@ -59,6 +60,7 @@ public class DummyContent {
             this. regal = regal;
             this. price = price;
             this. description = description;
+            this. barcode = barcode;
 
         }
         @Override
