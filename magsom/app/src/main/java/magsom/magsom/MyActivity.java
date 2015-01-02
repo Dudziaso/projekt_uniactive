@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -16,7 +17,8 @@ import android.widget.Toast;
 
 
 public class MyActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ProductFragment.OnFragmentInteractionListener{
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ProductFragment.OnFragmentInteractionListener,
+            AddProductFragment.OnFragmentInteractionListener{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -67,7 +69,7 @@ public class MyActivity extends Activity
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
-
+                switchFragment( new AddProductFragment());
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
@@ -124,6 +126,11 @@ public class MyActivity extends Activity
     @Override
     public void onFragmentInteraction(String id) {
         Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
 

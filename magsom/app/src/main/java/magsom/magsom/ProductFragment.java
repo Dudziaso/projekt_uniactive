@@ -5,8 +5,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,6 +26,18 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import magsom.magsom.dummy.DummyContent;
@@ -170,7 +185,7 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
 //        }
 //        Toast.makeText(getActivity(), post.dummyContent.ITEMS.get(position).mProductId + " Clicked!", Toast.LENGTH_SHORT).show();
         Toast.makeText(getActivity(), mAdapter.getItemId(position)+ " Clicked!", Toast.LENGTH_SHORT).show();
-        FireMissilesDialogFragment ireMissilesDialogFragment = new FireMissilesDialogFragment((DummyContent.DummyItem) mAdapter.getItem(position));
+        ProductDetailsDialogFragment ireMissilesDialogFragment = new ProductDetailsDialogFragment((DummyContent.DummyItem) mAdapter.getItem(position));
         ireMissilesDialogFragment.show(getFragmentManager(), "New Dialog");
 
     }
@@ -204,11 +219,19 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
     }
 
 
-    public class FireMissilesDialogFragment extends DialogFragment {
+    public class ProductDetailsDialogFragment extends DialogFragment {
         DummyContent.DummyItem product;
         EditText editBarcode;
+        EditText editName;
+        EditText editUsage;
+        EditText editPolka;
+        EditText editRegal;
+        EditText editPrice;
+        EditText editNumber;
+        EditText editDescription;
+        Button scanBtn;
 
-        public FireMissilesDialogFragment(DummyContent.DummyItem product){
+        public ProductDetailsDialogFragment(DummyContent.DummyItem product){
             this.product = product;
         }
         @Override
@@ -218,20 +241,19 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
             LayoutInflater inflater = getActivity().getLayoutInflater();
             View modifyView = inflater.inflate(R.layout.dialog_edit_item_list, null);
 
-            EditText editName = (EditText) modifyView.findViewById(R.id.et_product_name);
-            EditText editUsage = (EditText) modifyView.findViewById(R.id.et_product_usage);
-            EditText editPolka = (EditText) modifyView.findViewById(R.id.et_product_polka);
-            EditText editRegal = (EditText) modifyView.findViewById(R.id.et_product_regal);
-            EditText editPrice = (EditText) modifyView.findViewById(R.id.et_product_price);
-            EditText editNumber = (EditText) modifyView.findViewById(R.id.et_product_number);
-            EditText editDescription = (EditText) modifyView.findViewById(R.id.et_product_description);
+            editName = (EditText) modifyView.findViewById(R.id.et_product_name);
+            editUsage = (EditText) modifyView.findViewById(R.id.et_product_usage);
+            editPolka = (EditText) modifyView.findViewById(R.id.et_product_polka);
+            editRegal = (EditText) modifyView.findViewById(R.id.et_product_regal);
+            editPrice = (EditText) modifyView.findViewById(R.id.et_product_price);
+            editNumber = (EditText) modifyView.findViewById(R.id.et_product_number);
+            editDescription = (EditText) modifyView.findViewById(R.id.et_product_description);
             editBarcode = (EditText) modifyView.findViewById(R.id.et_product_barcode);
-            Button scanBtn = (Button)modifyView.findViewById(R.id.btn_product_barcode);
+            scanBtn = (Button)modifyView.findViewById(R.id.btn_product_barcode);
             scanBtn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     Intent intent = new Intent("com.google.zxing.client.android.SCAN");
                     intent.putExtra("SCAN_MODE", "EAN_CODE_MODE");
                     startActivityForResult(intent, 0);
@@ -261,37 +283,89 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
                     })
                     .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                           getDialog().cancel();
+                           DeleteProductRequest deleteProductRequest = new DeleteProductRequest(product.mProductId);
+                            try {
+                                deleteProductRequest.execute().get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                            switchFragment(new ProductFragment());
+
+                            getDialog().cancel();
                         }
                     })
                     .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            getDialog().cancel();
                         }
                      });
             return builder.create();
         }
 
         public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-            Log.d("dzialam", "cos chce zwrocic");
-            editBarcode.setText(intent.getStringExtra("SCAN_RESULT"));
-//            if (requestCode == 0) {
-//                if (resultCode == RESULT_OK) {
-//                    String contents = intent.getStringExtra("SCAN_RESULT");
-//                    String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-//                    // Handle successful scan
-////                    Toast toast = Toast.makeText(this, "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
-////                    toast.setGravity(Gravity.TOP, 25, 400);
-////                    toast.show();
-//                } else if (resultCode == RESULT_CANCELED) {
-//                    // Handle cancel
-////                    Toast toast = Toast.makeText(this, "Scan was Cancelled!", Toast.LENGTH_LONG);
-////                    toast.setGravity(Gravity.TOP, 25, 400);
-////                    toast.show();
-//
-//                }
-//            }
+
+            if (requestCode == 0) {
+                if (resultCode == getActivity().RESULT_OK) {
+                    editBarcode.setText(intent.getStringExtra("SCAN_RESULT"));
+                } else if (resultCode == getActivity().RESULT_CANCELED) {
+                    Log.d("Canceled", "Canceled");
+
+                }
+            }
+        }
+        public void switchFragment(Fragment fragment) {
+            //TextView helloText = (TextView) findViewById(R.id.hello_world);
+            //helloText.setText("Klik");
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.replace(R.id.container, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
 
+    }
+
+
+    private class DeleteProductRequest extends AsyncTask<String, Void, Boolean> {
+       private String productId;
+
+        public DeleteProductRequest(String productId){
+            this.productId = productId;
+        }
+
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            try {
+
+                //Setup the parameters
+                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs.add(new BasicNameValuePair("productId", productId));
+
+
+                //Add more parameters as necessary
+
+                //Create the HTTP request
+                HttpParams httpParameters = new BasicHttpParams();
+
+                //Setup timeouts
+                HttpConnectionParams.setConnectionTimeout(httpParameters, 15000);
+                HttpConnectionParams.setSoTimeout(httpParameters, 15000);
+
+                HttpClient httpclient = new DefaultHttpClient(httpParameters);
+                HttpPost httppost = new HttpPost("http://magsom.cba.pl/deleteproduct.php");
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                httpclient.execute(httppost);
+            }
+            catch (Exception e){
+                Log.e("ClientServerDemo", "Error:", e);
+            }
+            return true;
+
+        }
     }
 
 

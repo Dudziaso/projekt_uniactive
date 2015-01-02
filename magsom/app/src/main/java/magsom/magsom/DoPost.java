@@ -36,13 +36,6 @@ public class DoPost extends AsyncTask<String, Void, Boolean> {
     String strNameToSearch = "";
     DummyContent dummyContent = new DummyContent();
 
-    //Result data
-    String productName;
-    String strLastName;
-    int productId;
-    int intPoints;
-    public ArrayList<MyDataHolder> dataArray = new ArrayList<MyDataHolder>();
-
     public DoPost(Context context){
         this.mContext = context;
     }
@@ -89,7 +82,6 @@ public class DoPost extends AsyncTask<String, Void, Boolean> {
             for (int i = 0; i < jsonarray.length(); i++) {
 
                 JSONObject jsonobject = jsonarray.getJSONObject(i);
-                MyDataHolder data = new MyDataHolder();
                 DummyContent.DummyItem dummy = new DummyContent.DummyItem(jsonobject .getString("nazwa"), jsonobject .getString("idalternator"),
                         jsonobject .getString("typ"),jsonobject .getString("pulka"),jsonobject .getString("numer"),jsonobject .getString("regal"),
                         jsonobject .getString("cena"), jsonobject . getString("opis"), jsonobject.getString("barcode") );
@@ -120,23 +112,6 @@ public class DoPost extends AsyncTask<String, Void, Boolean> {
 //            Toast.makeText(mContext, exception.getMessage(), Toast.LENGTH_LONG).show();
 //        }
         Toast.makeText(mContext, "Downloading completed !", Toast.LENGTH_LONG).show();
-    }
-
-    public class MyDataHolder {
-        public String mProductName;
-        public String mProductId;
-        public String mProductType;
-        public String mShelveNumber;
-        public String number;
-        public String regal;
-        public String price;
-        public String description;
-
-        @Override
-        public String toString(){
-            return this.mProductId +": "+this.mProductName +" "+ this.description;
-        }
-
     }
 
 
