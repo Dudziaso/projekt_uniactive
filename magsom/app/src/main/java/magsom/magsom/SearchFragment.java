@@ -302,7 +302,17 @@ public class SearchFragment extends Fragment implements AbsListView.OnItemClickL
                     .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            // sign in the user ...
+                            EditProductRequest editProductRequest = new EditProductRequest(editBarcode.getText().toString(),
+                                    editName.getText().toString() ,editUsage.getText().toString(), editPolka.getText().toString(),
+                                    editRegal.getText().toString(), editPrice.getText().toString(), editNumber.getText().toString(),
+                                    editDescription.getText().toString(), product.mProductId);
+                            try {
+                                editProductRequest.execute().get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
                         }
                     })
                     .setNegativeButton("Delete", new DialogInterface.OnClickListener() {

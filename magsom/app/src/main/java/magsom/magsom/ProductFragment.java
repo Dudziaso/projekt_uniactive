@@ -278,12 +278,25 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
                     .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            // sign in the user ...
+
+//                            EditProductRequest(String barcode,String productName,String usage,String polka,
+//                                    String regal,String price,String number,String description,String idProduct)
+                            EditProductRequest editProductRequest = new EditProductRequest(editBarcode.getText().toString(),
+                                  editName.getText().toString() ,editUsage.getText().toString(), editPolka.getText().toString(),
+                                    editRegal.getText().toString(), editPrice.getText().toString(), editNumber.getText().toString(),
+                                    editDescription.getText().toString(), product.mProductId);
+                            try {
+                                editProductRequest.execute().get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
                         }
                     })
                     .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                           DeleteProductRequest deleteProductRequest = new DeleteProductRequest(product.mProductId);
+                            DeleteProductRequest deleteProductRequest = new DeleteProductRequest(product.mProductId);
                             try {
                                 deleteProductRequest.execute().get();
                             } catch (InterruptedException e) {
@@ -300,7 +313,7 @@ public class ProductFragment extends Fragment implements AbsListView.OnItemClick
                         public void onClick(DialogInterface dialog, int id) {
                             getDialog().cancel();
                         }
-                     });
+                    });
             return builder.create();
         }
 

@@ -107,6 +107,7 @@ public class ProductsListAdapter extends ArrayAdapter
                     }
 
                 }
+
                 results.values = nProductsList;
                 results.count = nProductsList.size();
             }
