@@ -18,7 +18,8 @@ import android.widget.Toast;
 
 public class MyActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, ProductFragment.OnFragmentInteractionListener,
-            AddProductFragment.OnFragmentInteractionListener{
+            AddProductFragment.OnFragmentInteractionListener,
+            SearchFragment.OnFragmentInteractionListener{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.

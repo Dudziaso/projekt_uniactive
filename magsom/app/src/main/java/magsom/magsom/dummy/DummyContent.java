@@ -34,7 +34,7 @@ public class DummyContent {
      * A dummy item representing a piece of content.
      */
     public static class DummyItem {
-//        public String id;
+        //        public String id;
 //        public String content;
         public String mProductName;
         public String mProductId;
@@ -46,7 +46,7 @@ public class DummyContent {
         public String description;
         public String barcode;
 
-//        public DummyItem(String id, String content) {
+        //        public DummyItem(String id, String content) {
 //            this.id = id;
 //            this.content = content;
 //        }
@@ -70,6 +70,9 @@ public class DummyContent {
 
         public String getItemName() {
             return mProductName;
+        }
+        public String getItemBarcode(){
+            return barcode;
         }
     }
 }

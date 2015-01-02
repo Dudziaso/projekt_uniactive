@@ -17,7 +17,7 @@ import magsom.magsom.dummy.DummyContent;
 /**
  * Created by Dudzias on 2014-11-23.
  */
-public class ProductsListAdapter extends ArrayAdapter
+public class SearchListAdapter extends ArrayAdapter
         implements Filterable {
 
     private Context context;
@@ -25,10 +25,10 @@ public class ProductsListAdapter extends ArrayAdapter
     public  ArrayList<DummyContent.DummyItem> mItemsArray; // list of all products
     public  ArrayList<DummyContent.DummyItem> originalList;
 
-    public ProductsListAdapter(Context context, int resource, List<DummyContent.DummyItem> objects) {
+    public SearchListAdapter(Context context, int resource, List<DummyContent.DummyItem> objects) {
         super(context, resource, objects);
         this.mItemsArray = (ArrayList<DummyContent.DummyItem>) objects;
-        this.originalList = (ArrayList<DummyContent.DummyItem>) objects;
+        this.originalList =(ArrayList<DummyContent.DummyItem>) objects;
         this.context = context;
     }
     @Override
@@ -79,6 +79,9 @@ public class ProductsListAdapter extends ArrayAdapter
     public long getItemId(int position){
         return Long.parseLong(mItemsArray.get(position).mProductId);
     }
+    public void resetProductList(){
+        mItemsArray = originalList;
+    }
 
 
     /**
@@ -95,17 +98,17 @@ public class ProductsListAdapter extends ArrayAdapter
                 results.values = mItemsArray;
                 results.count = mItemsArray.size();
                 Log.d("Size of Items list",  Integer.toString(mItemsArray.size()));
+
             }
             else {
                 // We perform filtering operation
                 List<DummyContent.DummyItem> nProductsList = new ArrayList<DummyContent.DummyItem>();
 
                 for (DummyContent.DummyItem p : mItemsArray) {
-                    if (p.getItemName().toUpperCase().startsWith(constraint.toString().toUpperCase())){
+                    if (p.getItemBarcode().toUpperCase().startsWith(constraint.toString().toUpperCase())){
                         nProductsList.add(p);
                         Log.d("Inserted into new list object", p.toString());
                     }
-
                 }
                 results.values = nProductsList;
                 results.count = nProductsList.size();
@@ -127,9 +130,7 @@ public class ProductsListAdapter extends ArrayAdapter
         }
     }
 
-    private void resetProductList() {
-        mItemsArray = originalList;
-    }
+
 
 
 }
